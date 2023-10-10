@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>personalCenter</title>
+    <link rel="stylesheet" href="../static/css/personalCenter_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="chose">
+    <button>个人中心</button>
+    <button class="uncurrent">订单管理</button>
+    <button class="uncurrent">订单</button>
+    <button class="uncurrent">用户管理</button>
+    <p>&nbsp &nbsp联系我们:025-12345678</p>
+</div>
+<div class="container">
+    <div class="picture">
+        <img src="../static/img/person.jpg">
+    </div>
+    <div class="space"></div>
+    <div class="info">
+        <h2>
+            <span>ID：</span>
+            <input disabled="true" id="UserID">
+        </h2>
+        <h1>
+            <span>账户：</span>
+            <input disabled="true" id="Account">
+        </h1>
+        <h1>
+            <span>昵称：</span>
+            <input disabled="true" class="edit" id="UserName">
+        </h1>
+        <h1>
+            <span>详细信息：</span>
+            <input disabled="true" class="edit" id="Remark">
+        </h1>
+        <button class="re">点击修改</button>
+    </div>
+</div>
+</body>
+<script>
+
+    $(".re").click(function(){
+        if(this.innerText=='点击修改'){
+            $(".edit").attr("disabled",false)
+            $(this).text('保存')
+            $(this).css('background','#BBFF66')
+        }
+        else if(this.innerText=='保存'){
+            let rUserName= $(".info input[id=UserName]").val()
+            let rRemark= $(".info input[id=Remark]").val()
+            console.log(rRemark)
+            const token = localStorage.getItem("Token") 
+            $.ajax({
+                type: "PUT",
+                url: "http://127.0.0.1:5000/api_1_0/sys/change",
+                headers: {
+                    "token": token,
+                },
+                data : {
+                    UserName:rUserName,
+                    Remark:rRemark
+                },
+                success: function(response) {
+                    console.log(response)
+                    if (response.code=='2000'){
+                        console.log(response)
+                        alert("修改成功！")
+                        $(".edit").attr("disabled",true)
+                        console.log('responssssssssssssssse')
+                        $('.re').text('点击修改')                        
+                        // this.innerText = "点击修改"
+                        $('.re').css('background','#55AA00')
+                    }
+                }
+            })
+        }
+    })
+
+    var UserType=''
+    $(document).ready(function(){
+            const token = localStorage.getItem("Token") 
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/api_1_0/sys/readinfo",
+                headers: {
+                    "token": token,
+                },
+                success: function(response) {
+                    console.log(response)
+
+                    if (response.code=='2000'){
+                        console.log(response)
+
+                        const item=response.data[0]
+                        console.log(item)
+                        var Account=item.Account
+                        var UserID=item.UserID
+                        var UserName=item.UserName
+                        var Remark=item.Remark
+                        UserType=item.UserType
+
+                        document.getElementById("UserID").value=UserID
+                        document.getElementById("Account").value=Account
+                        document.getElementById("UserName").value=UserName
+                        document.getElementById("Remark").value=Remark       
+                        if(UserType=='0'){
+                            $(".picture img").attr('src','../static/img/manage.jpg')
+                        }else if(UserType=='1'){
+                            $(".picture img").attr('src','../static/img/boss.jpg')
+                        }else if(UserType=='2'){
+                            $(".picture img").attr('src','../static/img/doctor.jpg')
+                        }                
+                    }
+                    else{
+                        alert('此账号不存在！')
+                    }
+                }
+            })
+    })
+
+    $(".uncurrent").click(function(){
+        localStorage.setItem("UserType",UserType)
+        if(this.innerText=='用户管理'){
+            if(UserType=='3'||UserType=='2'){
+                alert('此功能不对用户/医生开放！')
+            }else if(UserType=='0'){
+                window.location = 'userManage.html'
+            }else{
+                window.location='userManageBoss.html'
+            }
+        }else if(this.innerText=='订单管理'){
+            if(UserType =='3'){
+                window.location = 'orderManageU.html'
+            }else if(UserType=='2'){
+                window.location = 'orderManageD.html'
+            }else{
+                window.location = 'orderManageM.html'
+            }    
+        }else if(this.innerText=='订单'){
+            if(UserType=='3'){
+                window.location='orderInfoU.html'
+            }else{
+                alert('此功能不对管理员/医生开放！')
+            }         
+        }else if(this.innerText=='个人中心'){
+            if(UserType=='3'){
+                window.location='personalCenter.html'
+            }else{
+                window.location='personalCenter_sys.html'
+            } 
+        }        
+       })
+
+</script>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>userManage</title>
+    <link rel="stylesheet" href="../static/css/orderManageU_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="chose">
+    <button class="uncurrent">个人中心</button>
+    <button class="uncurrent">订单管理</button>
+    <button class="uncurrent">订单</button>
+    <button>用户管理</button>
+    <p>&nbsp &nbsp联系我们:025-12345678</p>
+</div>
+<div class="container" id="sumOrder">
+    <div class="search" >
+        <input placeholder='输入用户账号......' name="titleContent">
+        <button class="search_button">查询</button>
+        <button class='delUser'>删除账号</button>       
+    </div>
+
+    <div class="container-table">
+        
+    </div>
+   
+</div>
+</body>
+<script>
+    
+    $(".search_button").click(function(){
+        console.log('jjjksj')
+        $(".container-table").empty()
+        account=$(".search input[name=titleContent]").val()
+        console.log(account)
+        const token = localStorage.getItem("Token")
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000/api_1_0/user/search",
+            headers: {
+                token: token
+            },
+            data:{
+                Account:account
+            },
+            success: (response) => {
+                console.log(response)
+                const arr = response.data
+                if(arr.length==0){
+                    alert("查无此人！")
+                }else{
+                    for(var i = 0; i < arr.length; i++) {
+                        const item = arr[i]
+                        $(".container-table").empty()
+                        $("div.container-table").append(`
+                            <li>
+                                <div class="order">
+                                    <div class="picture">
+                                        <img width=100%; height=100%; src="../static/img/person.jpg">
+                                    </div>
+                                        <div class="space">
+                                        </div>
+                                    <div class="info">
+                                        <table>
+                                            <tr style="height: 50px;">
+                                                <td>
+                                                    <span class="a1">ID：</span>
+                                                    <span class="a2">${item.UserID}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="a1">Account：</span>
+                                                    <span class="a2" name='UserAccount'>${item.Account}</span>
+                                                </td>
+                                            </tr>
+                                            <tr style="height: 50px;">
+                                                <td>
+                                                    <span class="a1">昵称：</span>
+                                                    <span class="a2">${item.UserName}</span>
+                                                </td>
+                                                <td>
+                                                    <span class="a1">电话：</span>
+                                                    <span class="a2">${item.Phone}</span>
+                                                </td>
+                                            </tr>
+                                            <tr style="height: 50px;">
+                                                <td colspan="2">
+                                                    <span class="a1">住址：</span>
+                                                    <span class="a2">${item.Adress}</span>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                        
+                                    </div>
+                                </div>
+                            
+                            </li>             
+                        `)
+                    }                    
+                }
+
+            }
+        })
+    })
+
+
+    $(".delUser").click(function(){
+        console.log('000000000')
+        delAccount=$("div.info span[name=UserAccount]").val()
+        console.log(delAccount)
+        const token = localStorage.getItem("Token")
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000/api_1_0/user/delete",
+            headers: {
+                token: token
+            },
+            data:{
+                Account:account
+            },
+            success: (response) => {
+                console.log(response)
+                alert('用户删除成功')
+                window.location='userManage.html'
+            }
+            })
+    }
+    )
+    var UserType='0'
+
+    $(".uncurrent").click(function(){
+        UserType=localStorage.getItem("UserType")
+        console.log(UserType)
+        if(this.innerText=='用户管理'){
+            if(UserType=='3'||UserType=='2'){
+                alert('此功能不对用户/医生开放！')
+            }else if(UserType=='0'){
+                window.location = 'userManage.html'
+            }else{
+                window.location='userManageBoss.html'
+            }
+        }else if(this.innerText=='订单管理'){
+            if(UserType =='3'){
+                window.location = 'orderManageU.html'
+            }else if(UserType=='2'){
+                window.location = 'orderManageD.html'
+            }else{
+                window.location = 'orderManageM.html'
+            }    
+        }else if(this.innerText=='订单'){
+            if(UserType=='3'){
+                window.location='orderInfoU.html'
+            }else{
+                alert('此功能不对管理员/医生开放！')
+            }         
+        }else if(this.innerText=='个人中心'){
+            if(UserType=='3'){
+                window.location='personalCenter.html'
+            }else{
+                window.location='personalCenter_sys.html'
+            } 
+        }        
+       })
+
+</script>
+</html>

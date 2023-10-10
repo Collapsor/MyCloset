@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderManageM</title>
+    <link rel="stylesheet" href="../static/css/orderManageD_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="chose">
+    <button class="uncurrent"><a class="buttonA" href="personalCenter.html">个人中心</a></button>
+    <button>订单管理</button>
+    <button class="uncurrent">订单</button>
+    <button class="uncurrent">用户管理</button>
+    <p>&nbsp &nbsp联系我们:025-12345678</p>
+</div>
+<div class="container" id="sumOrder">
+    <div class="search" >
+        
+            <input placeholder='输入订单编号......' name="titleContent">
+            <button class="search_button">查询</button>
+
+    </div>
+    <div class="container-table">
+
+    </div>
+</div>
+</body>
+<script>
+
+$(document).ready(function(){
+        const token = localStorage.getItem("Token")
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000/api_1_0/order/userRead",
+            headers: {
+                token: token
+            },
+            success: (response) => {
+                console.log(response)
+                const arr = response.data
+                for(var i = 0; i < arr.length; i++) {
+                    const item = arr[i]
+                    $("div.container-table").append(`
+                        <li>
+                            <div class="order">
+                                <div class="picture">
+                                    <img width=100%; height=100%; src="${item.Pic}">
+                                </div>
+                                <div class="space">
+                                </div>
+                                <div class="info">
+                                    <table>
+                                        <tr>
+                                            <td colspan="3">
+                                                <a id="orderHref">
+                                                    <span >订单编号：</span>
+                                                    <span class="orderID">${item.OrderID}</span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="a1">宠物姓名：</span>
+                                                <span class="a2">${item.petName}</span>
+                                            </td>
+                                            <td>
+                                                <span class="a1">宠物年龄：</span>
+                                                <span class="a2">${item.petAge}</span>
+                                            </td>
+                                            <td>
+                                                <span class="a1">宠物品种：</span>
+                                                <span class="a2">${item.petVariety}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="a1">主治医生ID：</span>
+                                                <span class="a2">${item.DoctorID}</span>
+                                            </td>
+                                            <td>
+                                                <span class="a1">主治医生：</span>
+                                                <span class="a2">${item.DoctorName}</span>
+                                            </td>
+                                            <td>
+                                                <span class="a1">预约时间：</span>
+                                                <span class="a2">${item.AppointmentTime}</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span class="a1">状态：</span>
+                                                <span class="a2">${item.Status_c}</span>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                        </li>             
+                    `)
+                }
+            }
+        })
+    })
+
+    $(".search_button").click(function(){
+        console.log('jjjksj')
+        let orderID=$(".search input[name=titleContent]").val()
+        console.log(orderID)
+        localStorage.setItem("orderID", orderID)
+        localStorage.setItem("UserType", UserType)
+        window.location = 'orderInfo.html'
+    })
+
+    var UserType='2'
+    $(".uncurrent").click(function(){
+    if(this.innerText=='用户管理'){
+        if(UserType=='3'||UserType=='2'){
+                alert('此功能不对用户/医生开放！')
+            }else if(UserType=='0'){
+                window.location = 'userManage.html'
+            }else{
+                window.localStorage='userManageBoss.html'
+            }
+    }else if(this.innerText=='订单管理'){
+        if(UserType =='3'){
+            window.location = 'orderManageU.html'
+        }else if(UserType=='2'){
+            window.location = 'orderManageD.html'
+        }else{
+            window.location = 'orderManageM.html'
+        }    
+    }else if(this.innerText=='订单'){
+        if(UserType=='3'){
+            window.location='orderInfoU.html'
+        }else{
+            alert('此功能不对管理员/医生开放！')
+        }         
+    }else if(this.innerText=='个人中心'){
+        if(UserType=='3'){
+            window.location='personalCenter.html'
+        }else{
+            window.location='personalCenter_sys.html'
+        } 
+    }        
+    })
+</script>
+</html>

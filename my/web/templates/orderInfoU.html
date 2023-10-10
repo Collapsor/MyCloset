@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>personalCenter</title>
+    <link rel="stylesheet" href="../static/css/orderInfo_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="chose">
+    <button class="uncurrent">个人中心</button>
+    <button class="uncurrent">订单管理</button>
+    <button >订单</button>
+    <button class="uncurrent">用户管理</button>
+    <p>&nbsp &nbsp联系我们:025-12345678</p>
+</div>
+<div class="container">
+    <div class="picture">
+        <img id="img-avatar" src="../static/img/dog2.jpg" class="img-responsive" alt="无法显示默认头像" />
+        <input id="chooseImage" type="file" name="file" accept="image/*">
+    </div>
+
+    <div class="space"></div>
+    <div class="info">
+        <h1>
+            <span>订单ID：</span>
+            <span class="orderID"></span>
+        </h1>
+        <h2>订单状态：未完成</h2>
+        <p>-------------------------------------------------------------客户信息-------------------------------------------------------------</p>
+        <table>
+            <tr>
+                <td>
+                    <span>主人ID：</span>
+                    <input disabled="true" id="UserID">
+                </td>
+                <td>
+                    <span>主人昵称：</span>
+                    <input disabled="true" class="edit" id="UserName">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>主人电话：</span>
+                    <input disabled="true" class="edit" id="Telephone">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>主人家庭住址：</span>
+                    <input disabled="true" class="edit" id="Adress">
+                </td>
+            </tr>
+        </table>
+        <p>-------------------------------------------------------------宠物信息-------------------------------------------------------------</p>
+        <table>
+            <tr>
+                <td>
+                    <span>宠物姓名：</span>
+                    <input disabled="true" id="petName"></span>
+                </td>
+                <td>
+                    <span>宠物年龄：</span>
+                    <input disabled="true" id="petAge">
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <span>宠物品种：</span>
+                    <input disabled="true" id="petVariety">
+                </td>
+                <td>
+                    <span>预约时间：</span>
+                    <input disabled="true" id="visit_time">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>宠物病症描述（客填）：</span>
+                    <textarea rows="5" cols="120" readonly id='user_remark'></textarea>
+                </td>
+            </tr>
+        </table>
+         <p>-------------------------------------------------------------医生信息-------------------------------------------------------------</p>
+        <table>
+            <tr>
+                <td>
+                    <span>医生ID：</span>
+                    <input disabled="true" id="doctorID" >
+                </td>
+                <td>
+                    <span>医生姓名：</span>
+                    <input disabled="true" id="doctorName">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>宠物病症描述（医填）：</span>
+                    <textarea rows="5" cols="120" readonly id="doctor_remark"></textarea>
+                </td>
+            </tr>
+        </table>
+        <p>-------------------------------------------------------------客服信息-------------------------------------------------------------</p>
+        <table>
+            <tr>
+                <td>
+                    <span>客服ID：</span>
+                </td>
+                <td>
+                    <span>客服姓名：</span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                     <span>客服回访信息：</span>
+                     <textarea rows="5" cols="120" readonly id="manage_remark"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <span>客服回访时间：</span>
+                    <input disabled="true" id="revisit_time" >
+                </td>
+            </tr>
+        </table>
+        <button class="re">点击修改</button>
+        <button class="del">删除订单</button>
+    </div>
+</div>
+</body>
+<script>
+    var UserType='3'
+
+    var file=null
+    $("#chooseImage").on('change',function(){
+        file= $("input[name=file]").prop("files")
+        console.log(file)
+        console.log(file[0])
+
+        let filePath = $(this).val(); //获取到input的value，里面是文件的路径
+        let fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase(); //获取文件后缀
+        let src = window.URL.createObjectURL(this.files[0]); //转成可以在本地预览的格式
+        console.log(src)
+        // 检查是否是图片
+        if( !fileFormat.match(/.png|.jpg|.jpeg|.bmp|.gif/) ) {
+            //error_prompt_alert
+            alert('上传错误,文件格式必须为：png/jpg/jpeg/bmp/gif');
+            this.value = ""; 
+            return ;
+        }
+        $('#img-avatar').attr('src', src); //将图片地址放置在img的src中。
+    });
+
+    $(".re").click(function(){
+        if(this.innerText=='点击修改'){
+            if(UserType =='3'){
+                $(".info input[id='petName']").attr("disabled",false)
+                $(".info input[id='petAge']").attr("disabled",false)
+                $(".info input[id='petVariety']").attr("disabled",false)
+                $(".info input[id='visit_time']").attr("disabled",false)
+                $(".info textarea[id='user_remark']").attr("readonly",false)
+            }else if(UserType=='0'||UserType=='1'){
+                $(".info input[id='doctorName']").attr("disabled",false)
+                $(".info input[id='doctorID']").attr("disabled",false)
+                $(".info input[id='revisit_time']").attr("disabled",false)
+                $(".info textarea[id='manage_remark']").attr("readonly",false)
+            }else{
+                $(".info textarea[id='doctor_remark']").attr("readonly",false)
+            }            
+            $(this).text('保存')
+            $(this).css('background','#BBFF66')
+        }
+        else if(this.innerText=='保存'){
+            console.log('000000000000')
+            let petName= $(".info input[id='petName']").val()
+            let petAge= $(".info input[id='petAge']").val()
+            let petVariety= $(".info input[id='petVariety']").val()
+            let visit_time= $(".info input[id='visit_time']").val()
+            var user_remark= $("#user_remark").val()
+            console.log(petName,petAge,visit_time)
+            console.log("[api] save image:")
+            console.log(file[0])
+            const token = localStorage.getItem("Token") 
+            let formData = new FormData();
+            formData.append("petName",petName)
+            formData.append("petVariety",petVariety)
+            formData.append("petAge",petAge)
+            formData.append("cRemark",user_remark)
+            formData.append("AppointmentTime",visit_time)
+            formData.append("pPic",file[0])
+            $.ajax({
+                type: "POST",
+                url: "http://127.0.0.1:5000/api_1_0/order/add",
+                headers: {
+                    "token": token,
+                },
+                contentType: false,
+                processData: false,
+                data: formData,
+                success: function(response) {
+                    console.log(response)
+                    console.log(response.data)
+                    if (response.code=='2000'){
+                        console.log(response)
+                        alert("修改成功！")
+                        $(".edit").attr("disabled",true)
+                        console.log('responssssssssssssssse')
+                        $('.re').text('点击修改')                        
+                        // this.innerText = "点击修改"
+                        $('.re').css('background','#55AA00')
+                    }
+                }
+            })
+        }
+    })
+
+    $(".del").click(function(){
+        console.log(UserType)    
+        if(UserType=='0'||UserType=='1'){
+            let orderID=$(".orderID").text()
+            console.log(orderID)
+            $.get("http://127.0.0.1:5000/api_1_0/order/delete", {
+                OrderID:orderID
+            }, function(response) {
+                console.log(response)
+                alert(response.message)
+                window.location = 'orderManageM.html'
+            })
+        }else{
+            alert("无删除权限，请联系客服！")
+        }
+    })
+
+    $(document).ready(function(){
+            file= $("input[name=file]").prop("files")
+            const token = localStorage.getItem("Token") 
+            $.ajax({
+                type: "GET",
+                url: "http://127.0.0.1:5000/api_1_0/user/readinfo",
+                headers: {
+                    "token": token,
+                },
+                success: function(response) {
+                    if (response.code=='2000'){
+                        console.log(response)
+
+                        const item=response.data[0]
+                        var UserID=item.UserID
+                        var UserName=item.UserName
+                        var telephone=item.Phone
+                        var Adress=item.Adress
+
+                        document.getElementById("UserID").value=UserID
+                        document.getElementById("UserName").value=UserName
+                        document.getElementById("Telephone").value=telephone
+                        document.getElementById("Adress").value=Adress
+                    }
+                    else{
+                        alert('此账号不存在！')
+                    }
+                }
+            })
+    })
+
+    $(".uncurrent").click(function(){
+        UserType=localStorage.getItem("UserType")
+        console.log(UserType)
+        if(this.innerText=='用户管理'){
+            if(UserType=='3'||UserType=='2'){
+                alert('此功能不对用户/医生开放！')
+            }else if(UserType=='0'){
+                window.location = 'userManage.html'
+            }else{
+                window.location='userManageBoss.html'
+            }
+        }else if(this.innerText=='订单管理'){
+            if(UserType =='3'){
+                window.location = 'orderManageU.html'
+            }else if(UserType=='2'){
+                window.location = 'orderManageD.html'
+            }else{
+                window.location = 'orderManageM.html'
+            }    
+        }else if(this.innerText=='订单'){
+            if(UserType=='3'){
+                window.location='orderInfoU.html'
+            }else{
+                alert('此功能不对管理员/医生开放！')
+            }         
+        }else if(this.innerText=='个人中心'){
+            if(UserType=='3'){
+                window.location='personalCenter.html'
+            }else{
+                window.location='personalCenter_sys.html'
+            } 
+        }        
+       })
+
+</script>
+</html>

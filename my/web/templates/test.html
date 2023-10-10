@@ -1,0 +1,28 @@
+<html>
+
+<head>
+    <title> test </title>
+    <meta charset="utf-8">
+</head>
+<script language="JavaScript">
+    function setReadonly() {
+        //document.getElementById("test").setAttribute("readOnly", true);
+        document.getElementById("test").readOnly=true;
+    }
+
+    function readWrite() {
+        //document.getElementById("test").setAttribute("readOnly", false);
+        document.getElementById("test").readOnly=false;
+    }
+
+</script>
+
+<body>
+    <form name="addform" id="addform" method="post" action="">
+        <input type="text" id="test" >
+        <input type="button"  value="只读" onclick="setReadonly();">
+        <input type="button"  value="读写" onclick="readWrite();">
+    </form>
+</body>
+
+</html>

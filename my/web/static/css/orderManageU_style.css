@@ -1,0 +1,147 @@
+* {
+    box-sizing: border-box;
+}
+body {
+    font-family: 'Montserrat',sans-serif;
+    background-image: linear-gradient(120deg,#55AA00,#BBFF66);;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 15px 50px;
+    width: 100%;
+    min-width: 1200px;
+}
+a {
+    color: black;
+    font-family: '宋体',sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    text-shadow:4px 2px 6px white;
+}
+table tr{
+    height: 50px;
+    border: 2px dashed #ccc;
+}
+td{
+    width: 33%;
+}
+.chose{
+    background:transport;
+    display:flex;
+    align-items: flex-end;
+}
+.container {
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, .25), 0 10px 10px rgba(0, 0, 0, .22);
+    position: relative;
+    overflow: hidden;
+    width: 1250px;
+    max-width: 100%;
+    min-height: 650px;
+    overflow: auto;
+    &::-webkit-scrollbar{
+        width: 6px;
+    }
+    &::-webkit-scrollbar-thumb{
+    border-radius:3px;
+    background-color: #ccc
+    }
+    &::-webkit-scrollbar-track-piece{
+    background-color:#ccc ;
+    }
+}
+.container li{
+    list-style: none;
+    border: 2px solid #ccc;
+    padding: 0px 20px;
+    width:100%;
+    height:100%;
+}
+.search{
+    background:white;
+    display: flex;
+	justify-content: center;
+	width:100%;
+	height:70px;
+}
+.search input{
+    width:500px;
+    height:30px;
+    margin-top:20px;
+}
+.search button{
+    background:#55AA00;
+    padding:5px 30px;
+    margin-top:20px;
+    height:30px;
+}
+.search select{
+    height:30px;
+    width: 100px;
+    margin-top:20px;
+}
+button {
+    border-radius: 10px;
+    border: 0px;
+    background: #fff;
+    color: black;
+    font-family: '宋体',sans-serif;
+    font-size: 20px;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+}
+button:active {
+    transform: scale(.95);
+}
+button:focus {
+    outline: none;
+}
+button.uncurrent{
+    background: #55AA00;
+    opacity: 0.5;
+}
+.order{
+    background: white;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height:200px;
+}
+.picture{
+    background: white;
+    width: 150px;
+    height:200px;
+    float:left;
+    padding:10px 10px;
+    }
+.space{
+    background: space;
+    width:3%;
+    height:200px;
+    float:left;
+}
+.info{
+    background: space;
+    height:200px;
+    width:80%;
+    float:left;
+    font-weight: normal;
+    font-family: '宋体',sans-serif;
+}
+.a1{
+    font-size:20px;
+}
+.a2{
+    font-size:20px;
+}
+.search delUser{
+    background-color: #aa000095;
+    width: 200px;
+    height: 50px;
+}

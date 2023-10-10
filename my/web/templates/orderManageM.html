@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderManageM</title>
+    <link rel="stylesheet" href="../static/css/orderManageM_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" charset="utf-8"></script>
+</head>
+<body>
+<div class="chose">
+    <button class="uncurrent"><a class="buttonA" href="personalCenter.html">个人中心</a></button>
+    <button>订单管理</button>
+    <button class="uncurrent">订单</button>
+    <button class="uncurrent">用户管理</button>
+    <p>&nbsp &nbsp联系我们:025-12345678</p>
+</div>
+<div class="container" id="sumOrder">
+    <div class="search" >
+            <input placeholder='输入订单编号......' name="titleContent"/>
+            <button class="search_button">查询</button>
+    </div>
+    <table class="container-table" margin-left="40px">
+        <tr>
+            <td>
+                <span>&nbsp &nbsp待处理订单</span>
+            </td>
+            <td>
+                <span>&nbsp &nbsp待回访订单</span>
+            </td>
+        </tr>
+    </table>        
+
+    <div class="order_arrangeDoctor">
+    </div> 
+
+    <div class="order_revisit">
+    </div> 
+
+        
+
+    
+
+</div>
+</body>
+<script>
+
+    var UserType='0'
+    
+    $(document).ready(function(){
+        const token = localStorage.getItem("Token")
+        UserType=localStorage.getItem("UserType")
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000/api_1_0/order/statusSys",
+            headers: {
+                token: token
+            },
+            data:{
+                Status:'0'
+            },
+            success: (response) => {
+                console.log("待处理订单",response)
+                const arr = response.data
+                for(var i = 0; i < arr.length; i++) {
+                    const item = arr[i]
+                    $("div.order_arrangeDoctor").append(`
+                    <li>
+                    <div class="order">
+                        <div class="picture">
+                            <img width=100%; height=100%; src="${item.Pic}">
+                        </div>
+                        <div class="space">
+                        </div>
+                        <div class="info">
+                            <div class="hd">
+                                    <span >订单编号：</span>
+                                    <span class="orderID">${item.OrderID}</span>
+                            </div>
+                            <div class="bd">
+                                <p>
+                                    <span class="a1">客户姓名：</span>
+                                    <span class="a2">${item.UserName}</span>                                    
+                                </p>
+                                <p>
+                                    <span class="a1">宠物姓名：</span>
+                                    <span class="a2">${item.petName}</span>                                   
+                                </p>
+                                <p>
+                                    <span class="a1">预约时间：</span>
+                                    <span class="a2">${item.AppointmentTime}</span>                                                            
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>              
+              `)
+                }
+            }
+        })
+        $.ajax({
+            type: "GET",
+            url: "http://127.0.0.1:5000/api_1_0/order/statusSys",
+            headers: {
+                token: token
+            },
+            data:{
+                Status:'2'
+            },
+            success: (response) => {
+                console.log(response)
+                const arr = response.data
+                for(var i = 0; i < arr.length; i++) {
+                    const item = arr[i]
+                    
+                    $("div.order_revisit").append(`
+                    <li>
+                    <div class="order">
+                        <div class="picture">
+                            <img width=100%; height=100%; src="${item.Pic}">
+                        </div>
+                        <div class="space">
+                        </div>
+                        <div class="info">
+                            <div class="hd">
+                                    <span >订单编号：</span>
+                                    <span class="orderID">${item.OrderID}</span>
+                            </div>
+                            <div class="bd">
+                                <p>
+                                    <span class="a1">客户姓名：</span>
+                                    <span class="a2">${item.UserName}</span>                                    
+                                </p>
+                                <p>
+                                    <span class="a1">宠物姓名：</span>
+                                    <span class="a2">${item.petName}</span>                                   
+                                </p>
+                                <p>
+                                    <span class="a1">主治医生：</span>
+                                    <span class="a2">${item.DoctorName}</span>                                                            
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </li>              
+              `)
+                }
+            }
+        })
+    })
+
+    $(".search_button").click(function(){
+        console.log('jjjksj')
+        let orderID=$(".search input[name=titleContent]").val()
+        console.log(orderID)
+        localStorage.setItem("orderID", orderID)
+        localStorage.setItem("UserType", UserType)
+        window.location = 'orderInfo.html'
+    })
+    
+
+    $(".uncurrent").click(function(){
+        UserType=localStorage.getItem("UserType")
+        console.log(UserType)
+        if(this.innerText=='用户管理'){
+            if(UserType=='3'||UserType=='2'){
+                alert('此功能不对用户/医生开放！')
+            }else if(UserType=='0'){
+                window.location = 'userManage.html'
+            }else{
+                window.location='userManageBoss.html'
+            }
+        }else if(this.innerText=='订单管理'){
+            if(UserType =='3'){
+                window.location = 'orderManageU.html'
+            }else if(UserType=='2'){
+                window.location = 'orderManageD.html'
+            }else{
+                window.location = 'orderManageM.html'
+            }    
+        }else if(this.innerText=='订单'){
+            if(UserType=='3'){
+                window.location='orderInfoU.html'
+            }else{
+                alert('此功能不对管理员/医生开放！')
+            }         
+        }else if(this.innerText=='个人中心'){
+            if(UserType=='3'){
+                window.location='personalCenter.html'
+            }else{
+                window.location='personalCenter_sys.html'
+            } 
+        }        
+       })
+    
+</script>
+</html>
